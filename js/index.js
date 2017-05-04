@@ -65,10 +65,10 @@ $('body').on('click', function() {
 //Restart
 $('body').on('click', '.restart', function(){
         // restart.style.display = 'none';
-
+         $('.blood').css('display', 'none');
          $('.restart-message').css('display', 'none');
 
-        $('.restart').css('display', 'none');
+         $('.restart').css('display', 'none');
 
     elem = Math.floor(Math.random() * bg_img.length);
     $(game).css('background', 'url(../images/' + bg_img[elem] + ') no-repeat');
@@ -228,11 +228,12 @@ function startGame() {
         trooper.style.backgroundPosition = thirdShot;
         localStorage['reward'] = 0;
         audio.src = 'media/shot.m4a';
+
         round = 0;
          time_lose = 6000;
          time_win = time_lose - 1;
         // alert('lose!!!');
-
+        $('.blood').css('display', 'block');
         $('.restart').css('display', 'block');
 
         $('.restart-message').css('display', 'block');

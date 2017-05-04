@@ -163,6 +163,8 @@
     text-align: center;
     font-weight: 700;
     display: none;
+    z-index: 3;
+
 }
 .play {
    position: absolute;
@@ -246,4 +248,13 @@
     border: 5px solid royalblue;
     border-radius: 20px;
 
+}
+.blood {
+    position: absolute;
+    display: none;
+    bottom: 60px;
+    left: 23%;
+    width: 1000px;
+    height: 850px;
+    opacity: 0.8;
 }
