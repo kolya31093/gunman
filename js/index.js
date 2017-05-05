@@ -12,7 +12,12 @@ var trooper = document.createElement('div');
 trooper.className = 'trooper';
 // // Audio element
 var audio = page.querySelector('.js-audio');
-var minus_time = 100;
+
+function randomInteger(min, max) {
+    var rand = min - 0.5 + Math.random() * (max - min + 1)
+    rand = Math.round(rand);
+    return rand;
+}
 
 trooper.style.backgroundImage = 'url(images/gunman.png)';
 var troopers = {
@@ -31,8 +36,8 @@ var troopers = {
         firstStep: '-120px -1067px',
         secondStep: '-240px -1067px',
         firstShot: '-360px -1067px',
-        secondShot: '-460px -1067px',
-        thirdShot: '-460px -1067px',
+        secondShot: '-470px -1067px',
+        thirdShot: '-470px -1067px',
         dead: '-930px -1067px',
         backgroundPosition: '0px -1067px'
     }
@@ -44,12 +49,12 @@ var reward = localStorage['reward'];
 
 var round = 0;
 
-$('body').on('click', function() {
-
-    audio.src = 'media/shot.mp3';
-
-
-});
+// $('body').on('click', function() {
+//
+//     audio.src = 'media/shot.mp3';
+//
+//
+// });
 //Play next level
   $('body').on('click', '.play', function(){
 
@@ -77,21 +82,6 @@ $('body').on('click', '.restart', function(){
         startGame();
         });
 //-------------------
-//move warrior/////////////////////////
-// function move(num) {
-//       var position_warrior = 500;
-//       for(var i = 0; i < num; i++) {
-//           setTimeout(function() {
-//               trooper.style.right = position_warrior + 'px';
-//               position_warrior += 50;
-//               window.timeout = 1000;
-//               var step = (i % 2 == 0) ? secondStep : firstStep;
-//               trooper.style.backgroundPosition = step;
-//           }, timeout);
-//           window.timeout += 1000;
-//       }
-// }
-//////////////////////
 function startGame() {
     //WARRIOR  choose///////////////////////////////
     var warrior = Math.floor(Math.random() * Object.keys(troopers).length);
@@ -109,43 +99,34 @@ function startGame() {
     var secondShot = troopers[warrior]['secondShot'];
     var thirdShot = troopers[warrior]['thirdShot'];
     var dead = troopers[warrior]['dead'];
-    // var time_lose = 6000;
-    // var time_win = time_lose - 1;
-    //move warrior/////////////////////////
-    // function move(num) {
-    //     var position_warrior = 500;
-    //     for(var i = 0; i < num; i++) {
-    //         window.timeout = 1000;
-    //         setTimeout(function() {
-    //             trooper.style.right = position_warrior + 'px';
-    //             position_warrior += 50;
-    //
-    //             var step = (i % 2 == 0) ? secondStep : firstStep;
-    //             trooper.style.backgroundPosition = step;
-    //         }, timeout);
-    //         window.move_interval += 1000;
-    //     }
-    // }
+    var time_lose = 6000;
+    var time_win = time_lose - 1;
+    var num = randomInteger(2, 12);
+    
+
+    // no sound shot player////////////////
+    $('body').off('click', '.trooper');
+
+////////////////Move////////////////////////////////
     function move(num) {
         var position_warrior = 50;
+        var i = 1;
 
-            window.timeout = num * 1000;
-            var move_interval = setInterval(function() {
-                trooper.style.right = position_warrior + 'px';
-                position_warrior += 50;
-
-                var step = (i % 2 == 0) ? secondStep : firstStep;
-                // trooper.style.backgroundPosition = step;
-            }, 1000);
-           setTimeout(function () {
-               clearInterval(move_interval);
-           }, num * 1000);
+        window.timeout = num * 1000;
+        var move_interval = setInterval(function() {
+            trooper.style.right = position_warrior + 'px';
+            position_warrior += 50;
+            i++;
+            var step = (i % 2 == 0) ? secondStep : firstStep;
+            trooper.style.backgroundPosition = step;
+        }, 1000);
+        setTimeout(function () {
+            clearInterval(move_interval);
+        }, num * 1000);
 
     }
-//////////////////////
-////////////////////////////////////////////////
     window.target = 0;
-    $('.intro').attr('src', 'media/intro.m4a');
+    $('.js-audio').attr('src', 'media/intro.m4a');
 //round
     $('.round').text(++round);
     setTimeout(function() {
@@ -166,29 +147,30 @@ function startGame() {
     //     trPos -= trPosStep;
     //     trooper.style.backgroundPosition = firstStep;
     // }, 2000);
+    // //Third step
     // setTimeout(function() {
     //     trooper.style.right = '200px';
     //     // trPos -= trPosStep;
     //     trooper.style.backgroundPosition = secondStep;
     // }, 3000);
     //
-    // //  Second Step
+    // //  Four Step
     // setTimeout(function() {
     //     trooper.style.right = '250px';
     //     trPos -= trPosStep;
     //     trooper.style.backgroundPosition = firstStep;
     // }, 4000);
-    move(6);
+    move(num);
     //  Center
 //FIRE!!!!!!----------------
     setTimeout(function() {
-        trooper.style.right = '300px';
+        trooper.style.right = ((num + 1) * 50) + 'px';
         trooper.style.backgroundPosition = stay;
         audio.src = 'media/fire.m4a';
         fire.style.display = 'block';
         setTimeout(function () {
             fire.style.display = 'none';
-        }, 1000);
+        }, 1000)
        //shot player
         $('body').on('click', '.trooper', function(e) {
 
@@ -197,9 +179,9 @@ function startGame() {
                 window.target = e.target;
             
         });
+    }, num * 1000 + 1000 );//5000sec  //пример 4 sec
+////////////////////////////////////////
 
-    }, timeout + 1000);
-    // --------------------------------
     // Player shot
     setTimeout(function() {
         if(window.target != 0){
@@ -209,21 +191,18 @@ function startGame() {
             console.log(reward);
             $('.js-reward').text(reward);
             console.log('Winner');
-            // clearTimeout(shot2);
-            // clearTimeout(shot3);
+            clearTimeout(shot2);
+            clearTimeout(shot3);
     //Deth-------------------------------
             setTimeout(function() {
-                trooper.style.right = '300px';
-
+                trooper.style.right = ((num + 1) * 50) + 'px';
+                trPos -= trPosStep;
                 trooper.style.backgroundPosition = dead;
-                var time_lose = timeout + 2000;
-                var time_win = time_lose - 1;
-                time_lose -= minus_time;
-                minus_time += 100;
-                // time_lose -= 100;
-                // time_win = time_lose - 1;
-                if(time_lose < timeout + 200){
-                    time_lose = timeout + 200;
+
+                time_lose -= 100;
+                time_win = time_lose - 1;
+                if(time_lose < 5200){
+                    time_lose = 5200;
                     time_win = time_lose - 1;
                 }
                if(reward >= 500) {
@@ -253,27 +232,30 @@ function startGame() {
 
             }, 300);
         };
-        // console.log(target.tagName);
-        audio.src = 'media/win.m4a';
+        setTimeout(function () {
+            audio.src = 'media/win.m4a';
+        },400);
+
     
-    }, time_win);
+    },num * 1000 + 2000 );//6000sec  //пример 4 sec
 // -------------------------------------
     //Trooper shot
     var shot1 = setTimeout(function () {
-        trooper.style.right = '300px';
+        trooper.style.right = ((num + 1) * 50) + 'px';
         trPos -= trPosStep;
         trooper.style.backgroundPosition = firstShot;
-    }, 5500);
+    }, num * 1000 + 1500);//5500sec  //пример 4 sec
 
     var shot2 = setTimeout(function () {
-        trooper.style.right = '300px';
+        trooper.style.right = ((num + 1) * 50) + 'px';
         trPos -= trPosStep;
         trooper.style.backgroundPosition = secondShot;
         audio.src = 'media/shot.m4a';
         console.log('lose!!!');
-    }, time_lose);
+    }, num * 1000 + 2000);//6000sec  //пример 4 sec
+
     var shot3 = setTimeout(function () {
-        trooper.style.right = '300px';
+        trooper.style.right = ((num + 1) * 50) + 'px';
         trPos -= trPosStep;
         trooper.style.backgroundPosition = thirdShot;
         localStorage['reward'] = 0;
@@ -297,7 +279,7 @@ function startGame() {
             // audio.src = 'media/death.m4a';
            
         }, 3000);
-    }, 6500);
+    }, num * 1000 + 2500);//6500sec  //пример 4 sec
 
 
 
