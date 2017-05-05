@@ -12,7 +12,7 @@ var trooper = document.createElement('div');
 trooper.className = 'trooper';
 // // Audio element
 var audio = page.querySelector('.js-audio');
-
+var minus_time = 100;
 
 trooper.style.backgroundImage = 'url(images/gunman.png)';
 var troopers = {
@@ -77,6 +77,21 @@ $('body').on('click', '.restart', function(){
         startGame();
         });
 //-------------------
+//move warrior/////////////////////////
+// function move(num) {
+//       var position_warrior = 500;
+//       for(var i = 0; i < num; i++) {
+//           setTimeout(function() {
+//               trooper.style.right = position_warrior + 'px';
+//               position_warrior += 50;
+//               window.timeout = 1000;
+//               var step = (i % 2 == 0) ? secondStep : firstStep;
+//               trooper.style.backgroundPosition = step;
+//           }, timeout);
+//           window.timeout += 1000;
+//       }
+// }
+//////////////////////
 function startGame() {
     //WARRIOR  choose///////////////////////////////
     var warrior = Math.floor(Math.random() * Object.keys(troopers).length);
@@ -94,8 +109,40 @@ function startGame() {
     var secondShot = troopers[warrior]['secondShot'];
     var thirdShot = troopers[warrior]['thirdShot'];
     var dead = troopers[warrior]['dead'];
-    var time_lose = 6000;
-    var time_win = time_lose - 1;
+    // var time_lose = 6000;
+    // var time_win = time_lose - 1;
+    //move warrior/////////////////////////
+    // function move(num) {
+    //     var position_warrior = 500;
+    //     for(var i = 0; i < num; i++) {
+    //         window.timeout = 1000;
+    //         setTimeout(function() {
+    //             trooper.style.right = position_warrior + 'px';
+    //             position_warrior += 50;
+    //
+    //             var step = (i % 2 == 0) ? secondStep : firstStep;
+    //             trooper.style.backgroundPosition = step;
+    //         }, timeout);
+    //         window.move_interval += 1000;
+    //     }
+    // }
+    function move(num) {
+        var position_warrior = 50;
+
+            window.timeout = num * 1000;
+            var move_interval = setInterval(function() {
+                trooper.style.right = position_warrior + 'px';
+                position_warrior += 50;
+
+                var step = (i % 2 == 0) ? secondStep : firstStep;
+                // trooper.style.backgroundPosition = step;
+            }, 1000);
+           setTimeout(function () {
+               clearInterval(move_interval);
+           }, num * 1000);
+
+    }
+//////////////////////
 ////////////////////////////////////////////////
     window.target = 0;
     $('.intro').attr('src', 'media/intro.m4a');
@@ -107,31 +154,31 @@ function startGame() {
         trooper.style.backgroundPosition = stay;
     }, 200);
     //  First Step
-    setTimeout(function() {
-        trooper.style.right = '50px';
-        // trPos -= trPosStep;
-        trooper.style.backgroundPosition = secondStep;
-    }, 1000);
-
-    //  Second Step
-    setTimeout(function() {
-        trooper.style.right = '150px';
-        trPos -= trPosStep;
-        trooper.style.backgroundPosition = firstStep;
-    }, 2000);
-    setTimeout(function() {
-        trooper.style.right = '200px';
-        // trPos -= trPosStep;
-        trooper.style.backgroundPosition = secondStep;
-    }, 3000);
-
-    //  Second Step
-    setTimeout(function() {
-        trooper.style.right = '250px';
-        trPos -= trPosStep;
-        trooper.style.backgroundPosition = firstStep;
-    }, 4000);
-
+    // setTimeout(function() {
+    //     trooper.style.right = '50px';
+    //     // trPos -= trPosStep;
+    //     trooper.style.backgroundPosition = secondStep;
+    // }, 1000);
+    //
+    // //  Second Step
+    // setTimeout(function() {
+    //     trooper.style.right = '150px';
+    //     trPos -= trPosStep;
+    //     trooper.style.backgroundPosition = firstStep;
+    // }, 2000);
+    // setTimeout(function() {
+    //     trooper.style.right = '200px';
+    //     // trPos -= trPosStep;
+    //     trooper.style.backgroundPosition = secondStep;
+    // }, 3000);
+    //
+    // //  Second Step
+    // setTimeout(function() {
+    //     trooper.style.right = '250px';
+    //     trPos -= trPosStep;
+    //     trooper.style.backgroundPosition = firstStep;
+    // }, 4000);
+    move(6);
     //  Center
 //FIRE!!!!!!----------------
     setTimeout(function() {
@@ -141,7 +188,7 @@ function startGame() {
         fire.style.display = 'block';
         setTimeout(function () {
             fire.style.display = 'none';
-        }, 1000)
+        }, 1000);
        //shot player
         $('body').on('click', '.trooper', function(e) {
 
@@ -151,8 +198,8 @@ function startGame() {
             
         });
 
-//-----------------------------------
-    }, 5000);
+    }, timeout + 1000);
+    // --------------------------------
     // Player shot
     setTimeout(function() {
         if(window.target != 0){
@@ -162,18 +209,21 @@ function startGame() {
             console.log(reward);
             $('.js-reward').text(reward);
             console.log('Winner');
-            clearTimeout(shot2);
-            clearTimeout(shot3);
+            // clearTimeout(shot2);
+            // clearTimeout(shot3);
     //Deth-------------------------------
             setTimeout(function() {
                 trooper.style.right = '300px';
-                trPos -= trPosStep;
-                trooper.style.backgroundPosition = dead;
 
-                time_lose -= 100;
-                time_win = time_lose - 1;
-                if(time_lose < 5200){
-                    time_lose = 5200;
+                trooper.style.backgroundPosition = dead;
+                var time_lose = timeout + 2000;
+                var time_win = time_lose - 1;
+                time_lose -= minus_time;
+                minus_time += 100;
+                // time_lose -= 100;
+                // time_win = time_lose - 1;
+                if(time_lose < timeout + 200){
+                    time_lose = timeout + 200;
                     time_win = time_lose - 1;
                 }
                if(reward >= 500) {
